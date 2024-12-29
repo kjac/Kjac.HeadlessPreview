@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Kjac.BackOfficePreview.Services;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Options;
@@ -9,16 +10,17 @@ using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Api.Management.OpenApi;
 using Umbraco.Cms.Api.Common.OpenApi;
+using Umbraco.Extensions;
 
 namespace Kjac.BackOfficePreview.Composers
 {
-    public class Composer : IComposer
+    public sealed class Composer : IComposer
     {
         public void Compose(IUmbracoBuilder builder)
         {
-
             builder.Services.AddSingleton<ISchemaIdHandler, BackOfficePreviewSchemaIdHandler>();
             builder.Services.AddSingleton<IOperationIdHandler, BackOfficePreviewOperationIdHandler>();
+            builder.Services.AddUnique<IContentPreviewService, NoopContentPreviewService>();
             builder.Services.ConfigureOptions<BackOfficePreviewSwaggerGenOptions>();
         }
 

@@ -9,7 +9,7 @@ namespace Kjac.BackOfficePreview.Controllers
     [VersionedApiBackOfficeRoute(Constants.ApiName)]
     [MapToApi(Constants.ApiName)]
     [Authorize(Policy = AuthorizationPolicies.SectionAccessContent)]
-    public class BackOfficePreviewControllerBase : ManagementApiControllerBase
+    public abstract class BackOfficePreviewControllerBase : ManagementApiControllerBase
     {
     }
 }

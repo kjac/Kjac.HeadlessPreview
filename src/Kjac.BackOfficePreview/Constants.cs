@@ -1,6 +1,6 @@
 namespace Kjac.BackOfficePreview
 {
-    public class Constants
+    public static class Constants
     {
         public const string ApiName = "back-office-preview";
     }

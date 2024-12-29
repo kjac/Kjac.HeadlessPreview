@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Kjac.BackOfficePreview.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Core.Services;
@@ -7,12 +8,16 @@ namespace Kjac.BackOfficePreview.Controllers
 {
     [ApiVersion("1.0")]
     [ApiExplorerSettings(GroupName = "Content")]
-    public class ContentController : BackOfficePreviewControllerBase
+    public sealed class ContentController : BackOfficePreviewControllerBase
     {
         private readonly IContentService _contentService;
+        private readonly IContentPreviewService _contentPreviewService;
 
-        public ContentController(IContentService contentService)
-            => _contentService = contentService;
+        public ContentController(IContentService contentService, IContentPreviewService contentPreviewService)
+        {
+            _contentService = contentService;
+            _contentPreviewService = contentPreviewService;
+        }
 
         [HttpGet("preview-url")]
         [ProducesResponseType<string>(StatusCodes.Status200OK)]
@@ -22,20 +27,13 @@ namespace Kjac.BackOfficePreview.Controllers
             var document = _contentService.GetById(documentId);
             if (document is null)
             {
-                return NotFound();
+                return BadRequest("Document could not be found.");
             }
 
-            // emulate content type that cannot be previewed
-            if (document.ContentType.Alias == "authors")
-            {
-                return NotFound();
-            }
-
-            // TODO: clean up
-            // NOTE: requires running next.js as: next dev --experimental-https
-            // - see https://vercel.com/guides/access-nextjs-localhost-https-certificate-self-signed for details.
-            //const previewUrl = `https://localhost:3000/api/preview?secret=super-secret-preview-key&redirect=/posts/preview-${this._documentId}`;
-            return Ok($"https://localhost:44304/preview?id={documentId}&culture={culture}");
+            var previewUrl = _contentPreviewService.PreviewUrl(document, culture);
+            return previewUrl is not null
+                ? Ok(previewUrl)
+                : NotFound();
         }
     }
 }
