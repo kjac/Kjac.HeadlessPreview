@@ -9,9 +9,6 @@ import {BACK_OFFICE_PREVIEW_CONTEXT_TOKEN, WorkspaceContext} from '../workspace.
 import {PreviewDevice} from '../../models/previewDevice.ts';
 import {UmbDocumentTypeDetailRepository} from '@umbraco-cms/backoffice/document-type';
 import {ContentService} from "../../api";
-// TODO: clean up
-// import {UMB_MODAL_MANAGER_CONTEXT} from '@umbraco-cms/backoffice/modal';
-// import {BACK_OFFICE_PREVIEW_EDIT_PROPERTY_MODAL_TOKEN} from './edit-property.modal.view.ts';
 
 @customElement('back-office-preview-view')
 export default class FiltersWorkspaceViewElement extends UmbLitElement {
@@ -21,8 +18,6 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
     private _webSocket?: WebSocket;
     private _activeVariant?: ActiveVariant;
     private _workspaceContext?: WorkspaceContext;
-    // TODO: clean up
-    // private _modalManagerContext?: typeof UMB_MODAL_MANAGER_CONTEXT.TYPE;
     private _iframe?: HTMLIFrameElement;
 
     @state()
@@ -89,10 +84,6 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
                 console.error("No document found in the workspace context, aborting preview.")
                 return;
             }
-            // TODO: clean up
-            // this._documentId = instance.getUnique();
-            // this._documentTypeId = instance.getContentTypeUnique();
-            // const knownVariants = document.variants.filter(variant => !!variant.createDate);
             this._documentId = document.unique;
             this._documentTypeId = document.documentType.unique;
             const knownVariants = document.variants.filter(variant => !!variant.createDate);
@@ -121,14 +112,12 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
                 }
             })
         });
+
         this.consumeContext(BACK_OFFICE_PREVIEW_CONTEXT_TOKEN, (instance) => {
             this._workspaceContext = instance;
             this._device = this._workspaceContext.getLastDevice() ?? this._device;
         });
-        // TODO: clean up
-        // this.consumeContext(UMB_MODAL_MANAGER_CONTEXT, (instance) => {
-        //     this._modalManagerContext = instance;
-        // });
+
         // TODO: should communicate save & preview via _workspaceContext instead of using SignalR - seems overkill to use SignalR?
         this.consumeContext(UMB_APP_CONTEXT, (instance) => {
             this._serverUrl = instance.getServerUrl();
@@ -314,25 +303,6 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
 
         // TODO: is there a more graceful way to navigate? ideally something that allows activating the "Edit" workspace view for the specific tab?
         window.history.pushState(null, '', editUrl);
-
-        // TODO: clean up
-        // const modalContext = this._modalManagerContext?.open(
-        //     this,
-        //     BACK_OFFICE_PREVIEW_EDIT_PROPERTY_MODAL_TOKEN,
-        //     {
-        //         data: {
-        //             alias: alias
-        //         }
-        //     }
-        // );
-        // modalContext
-        //     ?.onSubmit()
-        //     .then(() => {
-        //         // nothing to do here :)
-        //     })
-        //     .catch(() => {
-        //         // the modal was cancelled, do nothing
-        //     });
     }
 
     private async _messageHandler(message: MessageEvent<any>) {

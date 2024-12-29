@@ -1,6 +1,5 @@
 ﻿const umbPreviewMessage = (category, value) => window.parent.postMessage(`umb.preview|${category}|${value}`, "*");
 
-// TODO: include in src
 window.onload = () => {
     if (window.parent === window) {
         console.warn('No parent window found, umb.preview is disabled');
