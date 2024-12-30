@@ -1,5 +1,10 @@
 import {UMB_WORKSPACE_CONDITION_ALIAS} from '@umbraco-cms/backoffice/workspace';
-import {PACKAGE_ALIAS, PACKAGE_NAME, SPLIT_VIEW_IS_NOT_ACTIVE_CONDITION_ALIAS} from '../constants.ts';
+import {
+    LIST_VIEW_EDIT_MODAL_IS_NOT_ACTIVE_CONDITION_ALIAS,
+    PACKAGE_ALIAS,
+    PACKAGE_NAME,
+    SPLIT_VIEW_IS_NOT_ACTIVE_CONDITION_ALIAS
+} from '../constants.ts';
 import {UMB_DOCUMENT_WORKSPACE_ALIAS} from '@umbraco-cms/backoffice/document';
 import {UMB_ENTITY_IS_NOT_TRASHED_CONDITION_ALIAS} from '@umbraco-cms/backoffice/recycle-bin';
 
@@ -42,7 +47,6 @@ export const manifests: Array<UmbExtensionManifest> = [
     {
         type: 'workspaceAction',
         kind: 'default',
-        overwrites: 'Umb.WorkspaceAction.Document.SaveAndPreview',
         alias: `${PACKAGE_ALIAS}.WorkspaceAction.Document.SaveAndPreview`,
         api: () => import('./actions/save-and-preview.workspace.action.ts'),
         name: `${PACKAGE_ALIAS} Save And Preview Document Workspace Action`,
@@ -57,6 +61,9 @@ export const manifests: Array<UmbExtensionManifest> = [
             },
             {
                 alias: UMB_ENTITY_IS_NOT_TRASHED_CONDITION_ALIAS
+            },
+            {
+                alias: LIST_VIEW_EDIT_MODAL_IS_NOT_ACTIVE_CONDITION_ALIAS
             }
         ],
     },
