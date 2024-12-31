@@ -8,7 +8,7 @@ import {UMB_INVARIANT_CULTURE} from '@umbraco-cms/backoffice/variant';
 import {BACK_OFFICE_PREVIEW_CONTEXT_TOKEN, WorkspaceContext} from '../workspace.context.ts';
 import {PreviewDevice} from '../../models/previewDevice.ts';
 import {UmbDocumentTypeDetailRepository} from '@umbraco-cms/backoffice/document-type';
-import {ContentService} from "../../api";
+import {DocumentPreviewUrlInfoModel, DocumentService} from '../../api';
 
 @customElement('back-office-preview-view')
 export default class FiltersWorkspaceViewElement extends UmbLitElement {
@@ -21,7 +21,7 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
     private _iframe?: HTMLIFrameElement;
 
     @state()
-    private _previewUrl?: string;
+    private _previewUrlInfo?: DocumentPreviewUrlInfoModel;
 
     @state()
     private _device: PreviewDevice;
@@ -97,7 +97,7 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
                     ? activeVariant
                     : undefined;
 
-                const previewUrlResponse = await ContentService.getBackOfficePreviewPreviewUrl({
+                const previewUrlResponse = await DocumentService.getBackOfficePreviewPreviewUrlInfo({
                     query: {
                         documentId: this._documentId!,
                         culture: this._activeVariant?.culture ?? undefined
@@ -105,10 +105,10 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
                 })
 
                 if (previewUrlResponse.error) {
-                    this._previewUrl = "##not_supported##";
+                    console.error("The preview URL info endpoint yielded an error", previewUrlResponse.error);
                 }
                 else {
-                    this._previewUrl = previewUrlResponse?.data;
+                    this._previewUrlInfo = previewUrlResponse?.data;
                 }
             })
         });
@@ -173,14 +173,14 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
             `;
         }
 
-        if (!this._previewUrl) {
+        if (!this._previewUrlInfo) {
             return html`<uui-loader></uui-loader>`;
         }
 
-        if (this._previewUrl === "##not_supported##") {
+        if (!this._previewUrlInfo.previewUrl) {
             return html`
                 <umb-body-layout header-transparent>
-                    <uui-box>This document cannot be previewed.</uui-box>
+                    <uui-box>${this._previewUrlInfo.info ?? 'This document cannot be previewed.'}</uui-box>
                 </umb-body-layout>
             `;
         }
@@ -188,7 +188,7 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
         return html`
             <div class="iframe-container">
                 <iframe
-                        src="${this._previewUrl}"
+                        src="${this._previewUrlInfo.previewUrl}"
                         class="${this._device.isDevice ? 'device' : nothing}"
                         style="width: ${this._device.dimensions.width}; height: ${this._device.dimensions.height}"
                         @load=${this._onIFrameLoad}>
@@ -202,7 +202,7 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
                             <uui-button popovertarget="devices-popover" look="primary">
                                 <uui-icon name="icon-display"></uui-icon>
                             </uui-button>
-                            <uui-button look="primary" href="${this._previewUrl}" target="_blank">
+                            <uui-button look="primary" href="${this._previewUrlInfo!.previewUrl}" target="_blank">
                                 <uui-icon name="icon-out"></uui-icon>
                             </uui-button>
                             <uui-popover-container id="devices-popover">

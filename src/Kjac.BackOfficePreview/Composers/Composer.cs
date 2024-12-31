@@ -20,7 +20,7 @@ namespace Kjac.BackOfficePreview.Composers
         {
             builder.Services.AddSingleton<ISchemaIdHandler, BackOfficePreviewSchemaIdHandler>();
             builder.Services.AddSingleton<IOperationIdHandler, BackOfficePreviewOperationIdHandler>();
-            builder.Services.AddUnique<IContentPreviewService, NoopContentPreviewService>();
+            builder.Services.AddUnique<IDocumentPreviewService, NoopDocumentPreviewService>();
             builder.Services.ConfigureOptions<BackOfficePreviewSwaggerGenOptions>();
         }
 

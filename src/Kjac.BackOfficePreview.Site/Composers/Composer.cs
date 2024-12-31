@@ -7,5 +7,5 @@ namespace Kjac.BackOfficePreview.Site.Composers;
 public class Composer : IComposer
 {
     public void Compose(IUmbracoBuilder builder)
-        => builder.Services.AddUnique<IContentPreviewService, ContentPreviewService>();
+        => builder.Services.AddUnique<IDocumentPreviewService, DocumentPreviewService>();
 }

@@ -7,7 +7,7 @@ import type {
 } from '@umbraco-cms/backoffice/extension-api';
 import {UmbConditionBase} from '@umbraco-cms/backoffice/extension-registry';
 import {
-    ContentService,
+    DocumentService,
     type GetBackOfficePreviewPreviewSupportedError,
     type GetBackOfficePreviewPreviewSupportedResponse
 } from "../api";
@@ -44,7 +44,7 @@ class RequestManager {
     public static request(documentTypeId: string)
     {
         if (!this._activeRequest) {
-            this._activeRequest = ContentService.getBackOfficePreviewPreviewSupported({
+            this._activeRequest = DocumentService.getBackOfficePreviewPreviewSupported({
                 query: {
                     documentTypeId: documentTypeId
                 }
