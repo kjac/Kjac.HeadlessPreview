@@ -5,9 +5,17 @@ namespace Kjac.BackOfficePreview.Site.Services;
 
 public class ContentPreviewService : IContentPreviewService
 {
-    public string? PreviewUrl(IContent content, string? culture)
-        // emulate content that does not support preview (the authors root)
-        => content.ContentType.Alias == "authors"
-            ? null
-            : $"https://localhost:44304/preview?id={content.Key}&culture={culture}";
+    public Task<string?> PreviewUrlAsync(IContent content, string? culture)
+        => Task.FromResult(
+            ContentTypeIsSupported(content.ContentType.Alias)
+                ? $"https://localhost:44304/preview?id={content.Key}&culture={culture}"
+                : null
+        );
+
+    public Task<bool> PreviewSupportedAsync(IContentType contentType)
+        => Task.FromResult(ContentTypeIsSupported(contentType.Alias));
+
+    // emulate content that does not support preview (the posts and authors root types)
+    private bool ContentTypeIsSupported(string alias)
+        => alias != "posts" && alias != "authors";
 }

@@ -4,5 +4,7 @@ namespace Kjac.BackOfficePreview.Services;
 
 public interface IContentPreviewService
 {
-    string? PreviewUrl(IContent content, string? culture);
+    Task<string?> PreviewUrlAsync(IContent content, string? culture);
+
+    Task<bool> PreviewSupportedAsync(IContentType contentType);
 }

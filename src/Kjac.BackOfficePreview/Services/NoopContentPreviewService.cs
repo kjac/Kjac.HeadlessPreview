@@ -4,5 +4,7 @@ namespace Kjac.BackOfficePreview.Services;
 
 public class NoopContentPreviewService : IContentPreviewService
 {
-    public string? PreviewUrl(IContent content, string? culture) => null;
+    public Task<string?> PreviewUrlAsync(IContent content, string? culture) => Task.FromResult((string?)null);
+
+    public Task<bool> PreviewSupportedAsync(IContentType contentType) => Task.FromResult(true);
 }

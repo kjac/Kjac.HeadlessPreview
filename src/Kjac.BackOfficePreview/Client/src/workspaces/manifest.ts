@@ -1,8 +1,8 @@
 import {UMB_WORKSPACE_CONDITION_ALIAS} from '@umbraco-cms/backoffice/workspace';
 import {
     LIST_VIEW_EDIT_MODAL_IS_NOT_ACTIVE_CONDITION_ALIAS,
-    PACKAGE_ALIAS,
-    PACKAGE_NAME,
+    PACKAGE_ALIAS, PACKAGE_NAME,
+    PREVIEW_IS_SUPPORTED_CONDITION_ALIAS,
     SPLIT_VIEW_IS_NOT_ACTIVE_CONDITION_ALIAS
 } from '../constants.ts';
 import {UMB_DOCUMENT_WORKSPACE_ALIAS} from '@umbraco-cms/backoffice/document';
@@ -41,6 +41,9 @@ export const manifests: Array<UmbExtensionManifest> = [
             },
             {
                 alias: SPLIT_VIEW_IS_NOT_ACTIVE_CONDITION_ALIAS
+            },
+            {
+                alias: PREVIEW_IS_SUPPORTED_CONDITION_ALIAS
             }
         ],
     },
@@ -64,6 +67,9 @@ export const manifests: Array<UmbExtensionManifest> = [
             },
             {
                 alias: LIST_VIEW_EDIT_MODAL_IS_NOT_ACTIVE_CONDITION_ALIAS
+            },
+            {
+                alias: PREVIEW_IS_SUPPORTED_CONDITION_ALIAS
             }
         ],
     },
