@@ -118,7 +118,6 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
             this._device = this._workspaceContext.getLastDevice() ?? this._device;
         });
 
-        // TODO: should communicate save & preview via _workspaceContext instead of using SignalR - seems overkill to use SignalR?
         this.consumeContext(UMB_APP_CONTEXT, (instance) => {
             this._serverUrl = instance.getServerUrl();
         });
@@ -230,6 +229,7 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
     private _changePreviewDevice(device: PreviewDevice) {
         this._device = device;
         this._workspaceContext?.updateLastDevice(device);
+        this._popoverContainer.togglePopover();
     }
 
     private _reloadIFrame() {
@@ -238,8 +238,7 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
         }
 
         this._loading = true;
-        // this forces the iframe to reload
-        // TODO: is this true for all browsers?
+        // re-setting the iframe source forces the iframe to reload
         this._iframe.src = this._iframe.src!;
     }
 
