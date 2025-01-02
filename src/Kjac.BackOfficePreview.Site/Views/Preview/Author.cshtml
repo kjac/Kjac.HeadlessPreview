@@ -1,5 +1,5 @@
-﻿@using System.Text.Json
-@model Kjac.BackOfficePreview.Site.Models.DeliveryApiContent
+﻿@using Kjac.BackOfficePreview.Site.Models;
+@model DeliveryApiContent<AuthorProperties>
 
 @{
     Layout = null;
@@ -25,13 +25,11 @@
 <body>
 <div>
     <h1>@Model.Name [@Model.ContentType]</h1>
-    @foreach (var property in Model.Properties)
-    {
-        <fieldset umb-preview-edit="@property.Key">
-            <legend>@property.Key</legend>
-            <code>@JsonSerializer.Serialize(property.Value, new JsonSerializerOptions(JsonSerializerDefaults.Web) { WriteIndented = true })</code>
-        </fieldset>
-    }
+
+    <fieldset umb-preview-edit="picture">
+        <legend>Cover Image</legend>
+        <img src="@Model.Properties.Picture[0].Url" height="200px" />
+    </fieldset>
 </div>
 </body>
 </html>
