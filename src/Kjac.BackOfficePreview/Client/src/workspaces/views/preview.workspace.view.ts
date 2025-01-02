@@ -1,5 +1,5 @@
 import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
-import {css, customElement, html, nothing, repeat, state, when} from '@umbraco-cms/backoffice/external/lit';
+import {css, customElement, html, nothing, query, repeat, state, when} from '@umbraco-cms/backoffice/external/lit';
 import {UMB_DOCUMENT_WORKSPACE_CONTEXT} from '@umbraco-cms/backoffice/document';
 import {UMB_APP_CONTEXT} from '@umbraco-cms/backoffice/app';
 import {UmbEntityUnique} from '@umbraco-cms/backoffice/entity';
@@ -29,6 +29,9 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
     @state()
     private _loading: boolean = true;
 
+    @query('#devices-popover')
+    private _popoverContainer!: HTMLElement
+    
     private _boundMessageHandler = this._messageHandler.bind(this);
 
     private readonly _devices: PreviewDevice[] = [
