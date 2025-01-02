@@ -31,6 +31,9 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
 
     @query('#devices-popover')
     private _popoverContainer!: HTMLElement
+
+    @query('#toolbar-container')
+    private _toolbarContainer!: HTMLElement
     
     private _boundMessageHandler = this._messageHandler.bind(this);
 
@@ -200,13 +203,15 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
                     this._loading,
                     () => html`<uui-loader></uui-loader>`,
                     () => html`
-                        <div class="toolbar-container">
-                            <uui-button popovertarget="devices-popover" look="primary">
-                                <uui-icon name="icon-display"></uui-icon>
-                            </uui-button>
-                            <uui-button look="primary" href="${this._previewUrlInfo!.previewUrl}" target="_blank">
-                                <uui-icon name="icon-out"></uui-icon>
-                            </uui-button>
+                        <div class="toolbar-container" id="toolbar-container">
+                            <div class="buttons">
+                                <uui-button popovertarget="devices-popover" look="primary">
+                                    <uui-icon name="icon-display"></uui-icon>
+                                </uui-button>
+                                <uui-button look="primary" href="${this._previewUrlInfo!.previewUrl}" target="_blank">
+                                    <uui-icon name="icon-out"></uui-icon>
+                                </uui-button>
+                            </div>
                             <uui-popover-container id="devices-popover">
                                 <umb-popover-layout>
                                     ${repeat(
@@ -224,11 +229,20 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
                                     )}
                                 </umb-popover-layout>
                             </uui-popover-container>
+                            <div class="toggle">
+                                <uui-button look="primary" @click=${this._toggleToolbar}>
+                                    <uui-icon name="icon-left-double-arrow"></uui-icon>
+                                </uui-button>
+                            </div>
                         </div>`
             )}
         `;
     }
 
+    private _toggleToolbar() {
+        this._toolbarContainer.classList.toggle('active');
+    }
+    
     private _changePreviewDevice(device: PreviewDevice) {
         this._device = device;
         this._workspaceContext?.updateLastDevice(device);
@@ -338,7 +352,6 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
         css`
             umb-popover-layout {
                 --uui-color-surface: var(--uui-color-header-surface);
-                --uui-color-border: var(--uui-color-header-surface);
                 color: var(--uui-color-header-contrast);
             }
 
@@ -376,16 +389,49 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
 
             .toolbar-container {
                 position: absolute;
-                left: 10px;
-                top: 10px;
-                display: flex;
-                flex-direction: column;
-                gap: 5px
+                top: -50px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgb(27, 38, 79);
+                padding-top: 10px;
+                border-radius: 0 0 5px 5px;
+                border: 1px solid var(--uui-color-border);
+                border-top: 0;
+                transition: top 80ms ease-in-out;
+            }
+
+            .toolbar-container .buttons {
+                margin: 0 10px;
+            }
+
+            .toolbar-container.active {
+                top: 0;
+                animation: 1s;
             }
 
             .toolbar-container uui-button {
                 border: 1px solid var(--uui-color-border);
                 border-radius: var(--uui-border-radius);
+            }
+
+            .toolbar-container .toggle {
+                text-align: center;
+            }
+
+            .toolbar-container .toggle uui-button {
+                border: 0;
+                width: 100%;
+                min-height: 20px;
+                height: 20px;
+                margin-top: 5px;
+            }
+
+            .toolbar-container .toggle uui-button uui-icon {
+                rotate: -90deg;
+            }
+
+            .toolbar-container.active .toggle uui-button uui-icon {
+                rotate: 90deg;
             }
         `,
     ];
