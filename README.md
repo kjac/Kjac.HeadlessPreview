@@ -224,7 +224,7 @@ The result is a hover effect around the editable properties. When they're clicke
 
 !["Click to edit" example](docs/click-to-edit.png)
 
-> [!INFORMATION]
+> [!NOTE]
 > If the document type uses tabs to group properties together, the tab containing the clicked property will be activated automatically.
 
 For your viewing pleasure, here's a screencast that shows it all in action 😉
