@@ -19,6 +19,7 @@ export type GetBackOfficePreviewPreviewUrlInfoData = {
     query?: {
         culture?: string;
         documentId?: string;
+        segment?: string;
     };
 };
 

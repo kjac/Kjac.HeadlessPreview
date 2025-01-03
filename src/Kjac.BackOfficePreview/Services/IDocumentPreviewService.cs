@@ -5,7 +5,7 @@ namespace Kjac.BackOfficePreview.Services;
 
 public interface IDocumentPreviewService
 {
-    Task<DocumentPreviewUrlInfo> PreviewUrlInfoAsync(IContent document, string? culture);
+    Task<DocumentPreviewUrlInfo> PreviewUrlInfoAsync(IContent document, string? culture, string? segment);
 
     Task<bool> PreviewSupportedAsync(IContentType documentType);
 }

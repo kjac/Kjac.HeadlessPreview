@@ -45,6 +45,7 @@ window.onload = () => {
                 element.addEventListener('click', () => umbPreviewMessage('edit', propertyAlias));
             });
 
+            // tell Umbraco we're ready
             umbPreviewMessage('init', 'ready');
         },
         500

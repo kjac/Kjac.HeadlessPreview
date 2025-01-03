@@ -6,7 +6,7 @@ namespace Kjac.BackOfficePreview.Site.Services;
 
 public class DocumentPreviewService : IDocumentPreviewService
 {
-    public Task<DocumentPreviewUrlInfo> PreviewUrlInfoAsync(IContent document, string? culture)
+    public Task<DocumentPreviewUrlInfo> PreviewUrlInfoAsync(IContent document, string? culture, string? segment)
         => Task.FromResult(
             ContentTypeIsSupported(document.ContentType.Alias)
                 // emulate content that for some reason cannot be previewed (in this case the "Code Coder" author) 

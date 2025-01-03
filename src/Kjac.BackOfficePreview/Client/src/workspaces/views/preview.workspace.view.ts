@@ -106,7 +106,8 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
                 const previewUrlResponse = await DocumentService.getBackOfficePreviewPreviewUrlInfo({
                     query: {
                         documentId: this._documentId!,
-                        culture: this._activeVariant?.culture ?? undefined
+                        culture: this._activeVariant?.culture ?? undefined,
+                        segment: this._activeVariant?.segment ?? undefined
                     }
                 })
 
@@ -185,7 +186,7 @@ export default class FiltersWorkspaceViewElement extends UmbLitElement {
         if (!this._previewUrlInfo.previewUrl) {
             return html`
                 <umb-body-layout header-transparent>
-                    <uui-box>${this._previewUrlInfo.info ?? 'This document cannot be previewed.'}</uui-box>
+                    <uui-box><div style="white-space: pre-line">${this._previewUrlInfo.info ?? 'This document cannot be previewed.'}</div></uui-box>
                 </umb-body-layout>
             `;
         }

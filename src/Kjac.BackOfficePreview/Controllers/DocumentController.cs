@@ -28,7 +28,7 @@ namespace Kjac.BackOfficePreview.Controllers
         [HttpGet("preview-url-info")]
         [ProducesResponseType<DocumentPreviewUrlInfo>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PreviewUrlInfo(Guid documentId, string? culture)
+        public async Task<IActionResult> PreviewUrlInfo(Guid documentId, string? culture, string? segment)
         {
             var document = _contentService.GetById(documentId);
             if (document is null)
@@ -36,7 +36,7 @@ namespace Kjac.BackOfficePreview.Controllers
                 return NotFound("Document could not be found.");
             }
 
-            var previewUrlInfo = await _documentPreviewService.PreviewUrlInfoAsync(document, culture);
+            var previewUrlInfo = await _documentPreviewService.PreviewUrlInfoAsync(document, culture, segment);
             return Ok(previewUrlInfo);
         }
 
