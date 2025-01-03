@@ -12,18 +12,16 @@ window.onload = () => {
         return;
     }
 
-    const styles = `
-            .umb-preview-edit:hover {
-                cursor: pointer;
-                box-shadow: inset 0px 0px 0px 2px rgb(27, 38, 79);
-            }
-        `;
-
     // this prevents (most) hydration warnings from Next.js
     setTimeout(
         () => {
             const styleSheet = document.createElement('style');
-            styleSheet.textContent = styles
+            styleSheet.textContent = `
+                .umb-preview-edit:hover {
+                    cursor: pointer;
+                    box-shadow: inset 0px 0px 0px 2px rgb(27, 38, 79);
+                }
+            `;
             document.head.appendChild(styleSheet)
 
             elements.forEach(element => {
