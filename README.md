@@ -101,9 +101,9 @@ The package comes with a few advanced options to improve the editor experience. 
 
 The preview iframe re-renders when it comes into view. This means that the scroll position of the iframe is lost when flipping back and forth between editing and previewing. This can be quite annoying to work with, particularly when previewing long pages and/or narrow viewports.
 
-The [same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy) imposes a lot of limitations on what can be done to an iframe, if the embedded URL is not `same-origin`, which is unlikely in the case of previewing a headless site. Manipulating the iframe scroll position is among those limitations.
+The [same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy) imposes a lot of limitations on what can be done to an iframe when the embedded URL is not `same-origin` (which is likely the case when previewing a headless site). Manipulating the iframe scroll position is among those limitations.
 
-To work around these limitations, the package features a communication protocol using `window.postMessage()` which allows for retaining the scroll position. To implement the protocol, include a script like this in the preview site:
+To work around these limitations, the package features a communication protocol using [`window.postMessage()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) which allows for retaining the scroll position. To implement the protocol, include a script like this in the preview site:
 
 ```js
 const umbPreviewMessage = (category, value) => window.parent.postMessage(`umb.preview|${category}|${value}`, "*");
@@ -142,7 +142,33 @@ window.addEventListener(
 
 Another part of the above-mentioned communication protocol enables the editors to click properties within the preview to edit them.
 
-To implement this, first add something like this to the preview site:
+To implement this, first add `umb-preview-edit='[property alias]'` attributes to the preview rendering for the relevant document properties - for example:
+
+```tsx
+export default function PostHeader({ title, coverImage, date, author }: Props) {
+   return (
+           <>
+              <PostTitle>{title}</PostTitle>
+              <div className="hidden md:block md:mb-12" umb-preview-edit="author">
+                 <Avatar author={author}/>
+              </div>
+              <div className="mb-8 md:mb-16 sm:mx-0" umb-preview-edit="coverImage">
+                 <CoverImage title={title} coverImage={coverImage}/>
+              </div>
+              <div className="max-w-2xl mx-auto">
+                 <div className="block md:hidden mb-6" umb-preview-edit="author">
+                    <Avatar author={author}/>
+                 </div>
+                 <div className="mb-6 text-lg">
+                    <Date dateString={date}/>
+                 </div>
+              </div>
+           </>
+   );
+}
+```
+
+Next, include a script to wire up the editing - something like this:
 
 ```js
 const umbPreviewMessage = (category, value) => window.parent.postMessage(`umb.preview|${category}|${value}`, "*");
@@ -194,35 +220,12 @@ window.onload = () => {
 > [!IMPORTANT]
 > Notice the overlap with the previous example script. A combined script can be found [right here](https://github.com/kjac/Kjac.BackOfficePreview/blob/main/src/Kjac.BackOfficePreview.Site/wwwroot/scripts/umb.preview.js).
 
-Next, add `umb-preview-edit='[property alias]'` attributes to the preview rendering to make the properties clickable - for example:
-
-```tsx
-export default function PostHeader({ title, coverImage, date, author }: Props) {
-   return (
-           <>
-              <PostTitle>{title}</PostTitle>
-              <div className="hidden md:block md:mb-12" umb-preview-edit="author">
-                 <Avatar author={author}/>
-              </div>
-              <div className="mb-8 md:mb-16 sm:mx-0" umb-preview-edit="coverImage">
-                 <CoverImage title={title} coverImage={coverImage}/>
-              </div>
-              <div className="max-w-2xl mx-auto">
-                 <div className="block md:hidden mb-6" umb-preview-edit="author">
-                    <Avatar author={author}/>
-                 </div>
-                 <div className="mb-6 text-lg">
-                    <Date dateString={date}/>
-                 </div>
-              </div>
-           </>
-   );
-}
-```
-
-The result is a hover effect around the editable properties. When they're clicked, the editor is taken to the appropriate document type tab in "Content" view:
+The result is a hover effect around the editable properties. When they're clicked, the editor is sent to the "Content" view:
 
 !["Click to edit" example](docs/click-to-edit.png)
+
+> [!INFORMATION]
+> If the document type uses tabs to group properties together, the tab containing the clicked property will be activated automatically.
 
 For your viewing pleasure, here's a screencast that shows it all in action 😉
 
