@@ -164,14 +164,6 @@ window.onload = () => {
                 cursor: pointer;
                 box-shadow: inset 0px 0px 0px 2px rgb(27, 38, 79);
             }
-            .umb-preview-edit .umb-preview-edit-button {
-                display: none;
-                background-color: rgb(27, 38, 79);
-                padding: 4px;color:
-                white;gap: 5px;
-                position: absolute;
-                z-index: 9999;
-            }
         `;
 
     // this prevents (most) hydration warnings from Next.js
