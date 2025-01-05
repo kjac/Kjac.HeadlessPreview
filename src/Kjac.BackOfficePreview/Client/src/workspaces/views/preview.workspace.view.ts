@@ -10,8 +10,8 @@ import {PreviewDevice} from '../../models/previewDevice.ts';
 import {UmbDocumentTypeDetailRepository} from '@umbraco-cms/backoffice/document-type';
 import {DocumentPreviewUrlInfoModel, DocumentService} from '../../api';
 
-@customElement('back-office-preview-view')
-export default class FiltersWorkspaceViewElement extends UmbLitElement {
+@customElement('kjac-back-office-preview-workspace-view')
+export default class PreviewWorkspaceViewElement extends UmbLitElement {
     private _serverUrl?: string;
     private _documentId?: UmbEntityUnique;
     private _documentTypeId?: UmbEntityUnique;
