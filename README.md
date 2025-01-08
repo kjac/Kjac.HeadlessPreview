@@ -86,9 +86,10 @@ With this in place, and given the blog is running on `https://localhost:3000`, t
 
 ![The "Preview" view with the Next.js blog](docs/preview-blog.png)
 
-Did you notice the little blue thing in the top of the preview? If you click it, it opens a toolbar with some useful features from the default preview functionality of Umbraco:
+The toolbar at the bottom of the screen contains some useful features, some of which originate from the default preview functionality of Umbraco:
 
 - Options for changing the preview viewport.
+- An option to maximize the preview to the full size of the browser window.
 - A link to open the preview in a new tab (outside the Umbraco workspace).
 
 ![The "Preview" view toolbar](docs/toolbar.png)
