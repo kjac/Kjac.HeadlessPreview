@@ -1,0 +1,14 @@
+{
+  "id": "Kjac.HeadlessPreview",
+  "name": "Headless Preview",
+  "version": "1.0.0",
+  "allowPackageTelemetry": true,
+  "extensions": [
+    {
+      "name": "Headless Preview Bundle",
+      "alias": "Kjac.HeadlessPreview.Bundle",
+      "type": "bundle",
+      "js": "/App_Plugins/KjacHeadlessPreview/kjac-headless-preview-bundle.js"
+    }
+  ]
+}

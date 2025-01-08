@@ -1,0 +1,38 @@
+﻿@using System.Text.Json
+@model Kjac.HeadlessPreview.Site.Models.DeliveryApiContent<Dictionary<string, object>>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+    <title>@Model.Name</title>
+    <script src="/scripts/umb.preview.js"></script>
+    <style>
+        @@media screen and (min-width: 1200px) {
+            body {
+                padding: 50px 100px;
+            }
+            code {
+                white-space: pre;
+            }
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1>@Model.Name [@Model.ContentType]</h1>
+    <em>Unexpected Delivery API content type.</em>
+    @foreach (var property in Model.Properties)
+    {
+        <fieldset umb-preview-edit="@property.Key">
+            <legend>@property.Key</legend>
+            <code>@JsonSerializer.Serialize(property.Value, new JsonSerializerOptions(JsonSerializerDefaults.Web) { WriteIndented = true })</code>
+        </fieldset>
+    }
+</div>
+</body>
+</html>
