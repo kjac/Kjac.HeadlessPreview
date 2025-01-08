@@ -21,7 +21,7 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
     private _iframe?: HTMLIFrameElement;
 
     @state()
-    private _fullscreen: boolean = false;
+    private _maximized: boolean = false;
 
     @state()
     private _previewUrlInfo?: DocumentPreviewUrlInfoModel;
@@ -219,10 +219,10 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
                                     <span>${this._device.label}</span>
                                 </div>
                             </uui-button>
-                            <uui-button look="primary" @click=${this._toggleFullscreen}>
+                            <uui-button look="primary" @click=${this._toggleMaximized}>
                                 <div class="button-content">
-                                    <uui-icon name="${this._fullscreen ? 'icon-exit-fullscreen' : 'icon-fullscreen-alt'}"></uui-icon>
-                                    <span>${this._fullscreen ? 'Exit fullscreen' : 'Fullscreen'}</span>
+                                    <uui-icon name="${this._maximized ? 'icon-exit-fullscreen' : 'icon-fullscreen-alt'}"></uui-icon>
+                                    <span>${this._maximized ? 'Restore' : 'Maximize'}</span>
                                 </div>
                             </uui-button>
                             <uui-button look="primary" href="${this._previewUrlInfo!.previewUrl}" target="_blank">
@@ -259,9 +259,9 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
         this._popoverContainer.togglePopover();
     }
 
-    private _toggleFullscreen() {
-        this.getHostElement().classList.toggle('fullscreen');
-        this._fullscreen = !this._fullscreen;
+    private _toggleMaximized() {
+        this.getHostElement().classList.toggle('maximized');
+        this._maximized = !this._maximized;
     }
 
     private _reloadIFrame() {
@@ -422,7 +422,7 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
                 gap: 5px;
             }
 
-            .toolbar-container.fullscreen {
+            .toolbar-container.maximized {
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -431,7 +431,7 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
                 z-index: 9998;
             }
             
-            :host(.fullscreen) {
+            :host(.maximized) {
                 position: fixed;
                 top: 0;
                 left: 0;
