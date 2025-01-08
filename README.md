@@ -230,5 +230,4 @@ The result is a hover effect around the editable properties. When they're clicke
 
 For your viewing pleasure, here's a screencast that shows it all in action 😉
 
-[Screencast of the package in action](https://github.com/user-attachments/assets/0485936e-a5b0-4527-bf68-74d277a99cc9)
-
+[Screencast of the package in action](https://github.com/user-attachments/assets/ba56be63-688b-4fb0-8a0d-491cbd405b79)
