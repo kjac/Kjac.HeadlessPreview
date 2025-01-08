@@ -21,6 +21,9 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
     private _iframe?: HTMLIFrameElement;
 
     @state()
+    private _fullscreen: boolean = false;
+
+    @state()
     private _previewUrlInfo?: DocumentPreviewUrlInfoModel;
 
     @state()
@@ -31,9 +34,6 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
 
     @query('#devices-popover')
     private _popoverContainer!: HTMLElement
-
-    @query('#toolbar-container')
-    private _toolbarContainer!: HTMLElement
     
     private _boundMessageHandler = this._messageHandler.bind(this);
 
@@ -45,6 +45,14 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
             icon: 'icon-display',
             flipIcon: false,
             dimensions: {height: '100%', width: '100%'},
+        },
+        {
+            alias: 'laptop',
+            label: 'Laptop',
+            isDevice: true,
+            icon: 'icon-laptop',
+            flipIcon: false,
+            dimensions: { height: '768px', width: '1366px' },
         },
         {
             alias: 'ipad-portrait',
@@ -205,14 +213,24 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
                     () => html`<uui-loader></uui-loader>`,
                     () => html`
                         <div class="toolbar-container" id="toolbar-container">
-                            <div class="buttons">
-                                <uui-button popovertarget="devices-popover" look="primary">
-                                    <uui-icon name="icon-display"></uui-icon>
-                                </uui-button>
-                                <uui-button look="primary" href="${this._previewUrlInfo!.previewUrl}" target="_blank">
+                            <uui-button popovertarget="devices-popover" look="primary">
+                                <div class="button-content">
+                                    <uui-icon name="${this._device.icon}" class=${this._device.flipIcon ? 'flip' : nothing}></uui-icon>
+                                    <span>${this._device.label}</span>
+                                </div>
+                            </uui-button>
+                            <uui-button look="primary" @click=${this._toggleFullscreen}>
+                                <div class="button-content">
+                                    <uui-icon name="${this._fullscreen ? 'icon-exit-fullscreen' : 'icon-fullscreen-alt'}"></uui-icon>
+                                    <span>${this._fullscreen ? 'Exit fullscreen' : 'Fullscreen'}</span>
+                                </div>
+                            </uui-button>
+                            <uui-button look="primary" href="${this._previewUrlInfo!.previewUrl}" target="_blank">
+                                <div class="button-content">
                                     <uui-icon name="icon-out"></uui-icon>
-                                </uui-button>
-                            </div>
+                                    <span>New window</span>
+                                </div>
+                            </uui-button>
                             <uui-popover-container id="devices-popover">
                                 <umb-popover-layout>
                                     ${repeat(
@@ -230,24 +248,20 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
                                     )}
                                 </umb-popover-layout>
                             </uui-popover-container>
-                            <div class="toggle">
-                                <uui-button look="primary" @click=${this._toggleToolbar}>
-                                    <uui-icon name="icon-left-double-arrow"></uui-icon>
-                                </uui-button>
-                            </div>
                         </div>`
             )}
         `;
     }
 
-    private _toggleToolbar() {
-        this._toolbarContainer.classList.toggle('active');
-    }
-    
     private _changePreviewDevice(device: PreviewDevice) {
         this._device = device;
         this._workspaceContext?.updateLastDevice(device);
         this._popoverContainer.togglePopover();
+    }
+
+    private _toggleFullscreen() {
+        this.getHostElement().classList.toggle('fullscreen');
+        this._fullscreen = !this._fullscreen;
     }
 
     private _reloadIFrame() {
@@ -390,49 +404,40 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
 
             .toolbar-container {
                 position: absolute;
-                top: -50px;
+                bottom: 0;
                 left: 50%;
                 transform: translateX(-50%);
                 background: rgb(27, 38, 79);
-                padding-top: 10px;
-                border-radius: 0 0 5px 5px;
-                border: 1px solid var(--uui-color-border);
-                border-top: 0;
-                transition: top 80ms ease-in-out;
-            }
-
-            .toolbar-container .buttons {
-                margin: 0 10px;
-            }
-
-            .toolbar-container.active {
-                top: 0;
-                animation: 1s;
+                --uui-button-border-radius: 0;
+                --uui-button-font-weight: normal;
+                display: flex;
             }
 
             .toolbar-container uui-button {
                 border: 1px solid var(--uui-color-border);
-                border-radius: var(--uui-border-radius);
             }
 
-            .toolbar-container .toggle {
-                text-align: center;
+            .toolbar-container uui-button .button-content {
+                display: flex;
+                gap: 5px;
             }
 
-            .toolbar-container .toggle uui-button {
-                border: 0;
-                width: 100%;
-                min-height: 20px;
-                height: 20px;
-                margin-top: 5px;
+            .toolbar-container.fullscreen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                z-index: 9998;
             }
-
-            .toolbar-container .toggle uui-button uui-icon {
-                rotate: -90deg;
-            }
-
-            .toolbar-container.active .toggle uui-button uui-icon {
-                rotate: 90deg;
+            
+            :host(.fullscreen) {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                z-index: 9998;
             }
         `,
     ];
