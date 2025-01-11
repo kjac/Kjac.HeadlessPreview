@@ -1,6 +1,6 @@
-# Back-Office Preview
+# Headless Preview
 
-The Back-Office Preview package offers an alternative to the default preview functionality of Umbraco.
+The Headless Preview package offers an alternative to the default preview functionality of Umbraco.
 
 This package has been built specifically for previewing headless sites, where content routing and rendering is not exclusively (or not at all) handled by Umbraco.
 
