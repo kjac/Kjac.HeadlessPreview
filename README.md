@@ -18,17 +18,13 @@ The "Preview" view is essentially an iframe to contain the preview of your headl
 
 This is because the package has no idea where to look for the preview of your headless site - or, in other words, which URL to render in the iframe. And this is where you come in 😊
 
-You need to add an implementation of `IDocumentPreviewService` to your Umbraco site. This interface has two responsibilities:
+You need to add an implementation of [`IDocumentPreviewService`](https://github.com/kjac/Kjac.HeadlessPreview/blob/main/src/Kjac.HeadlessPreview/Services/IDocumentPreviewService.cs) to your Umbraco site. This interface is responsible for calculating the preview URL of a specific document given the currently active back-office variance (culture and segment).
 
-1. Determine whether a specific document type can be previewed.
-   - If a document type does not support preview, the "Save and publish" button and the "Preview" view will be removed from the back-office.
-2. Calculate the preview URL of a specific document given the currently active back-office variance (culture and segment).
-
-Here's a sample implementation, using the Next.js Umbraco example as the headless site:
+Here's a sample implementation, using the [Next.js Umbraco blog example](https://github.com/vercel/next.js/tree/canary/examples/cms-umbraco) as the headless site:
 
 ```csharp
-using Kjac.BackOfficePreview.Models;
-using Kjac.BackOfficePreview.Services;
+using Kjac.HeadlessPreview.Models;
+using Kjac.HeadlessPreview.Services;
 using Umbraco.Cms.Core.Models;
 
 namespace My.Site.Services;
@@ -37,10 +33,6 @@ public class BlogDocumentPreviewService : IDocumentPreviewService
 {
     private const string PreviewHost = "https://localhost:3000";
     private const string PreviewSecret = "super-secret-preview-key";
-    
-    public Task<bool> PreviewSupportedAsync(IContentType documentType)
-        // only allow previewing of blog posts for simplicity
-        => Task.FromResult(documentType.Alias == "post");
 
     public Task<DocumentPreviewUrlInfo> PreviewUrlInfoAsync(IContent document, string? culture, string? segment)
     {
@@ -69,7 +61,7 @@ public class BlogDocumentPreviewService : IDocumentPreviewService
 You'll also need a composer to replace the default `IDocumentPreviewService` implementation with your own:
 
 ```csharp
-using Kjac.BackOfficePreview.Services;
+using Kjac.HeadlessPreview.Services;
 using My.Site.Services;
 using Umbraco.Cms.Core.Composing;
 
@@ -93,6 +85,65 @@ The toolbar at the bottom of the screen contains some useful features, some of w
 - A link to open the preview in a new tab (outside the Umbraco workspace).
 
 ![The "Preview" view toolbar](docs/toolbar.png)
+
+### Limiting the document types that support previewing
+
+By default, the headless preview is enabled for all document types. However, it's not given that this makes sense in a headless context.
+
+For example, in the Next.js Umbraco blog example, the authors are never rendered os their own entity; they only exist as documents for linkage with the blog posts. As such, authors cannot be previewed. 
+
+You can limit the document types that support previewing by adding a `HeadlessPreview` section to `appsettings.json`:
+
+```json
+{
+  "$schema": "appsettings-schema.json",
+  "HeadlessPreview": {
+    "SupportedDocumentTypes": ["post"]
+  },
+  "Umbraco": {
+    "CMS": {
+      "DeliveryApi": {
+        "Enabled": true,
+  // ...
+```
+
+If a document type alias is not in the list of `SupportedDocumentTypes`, the "Save and publish" button and the "Preview" view will be removed from the back-office.
+
+> [!NOTE]
+> If `SupportedDocumentTypes` is empty, preview will be enabled for all document types. 
+
+If you need to exercise more fine-grained control of the supported document types, you can swap the default behaviour with your own custom logic by implementing the [`IDocumentTypePreviewService`](https://github.com/kjac/Kjac.HeadlessPreview/blob/main/src/Kjac.HeadlessPreview/Services/IDocumentTypePreviewService.cs):
+
+```csharp
+using Kjac.HeadlessPreview.Services;
+using Umbraco.Cms.Core.Models;
+
+namespace My.Site.Services;
+
+public class MyDocumentTypePreviewService : IDocumentTypePreviewService
+{
+    public Task<bool> PreviewSupportedAsync(IContentType documentType)
+    {
+        // add your logic here
+    }
+}
+```
+
+Again, you'll need a composer to replace the default `IDocumentTypePreviewService` implementation with your own:
+
+```csharp
+using Kjac.HeadlessPreview.Services;
+using My.Site.Services;
+using Umbraco.Cms.Core.Composing;
+
+namespace My.Site.Composers;
+
+public class Composer : IComposer
+{
+    public void Compose(IUmbracoBuilder builder)
+        => builder.Services.AddUnique<IDocumentTypePreviewService, MyDocumentTypePreviewService>();
+}
+```
 
 ## Advanced options
 
@@ -219,7 +270,7 @@ window.onload = () => {
 ```
 
 > [!IMPORTANT]
-> Notice the overlap with the previous example script. A combined script can be found [right here](https://github.com/kjac/Kjac.BackOfficePreview/blob/main/src/Kjac.BackOfficePreview.Site/wwwroot/scripts/umb.preview.js).
+> Notice the overlap with the previous example script. A combined script can be found [right here](https://github.com/kjac/Kjac.HeadlessPreview/blob/main/src/Kjac.HeadlessPreview.Site/wwwroot/scripts/umb.preview.js).
 
 The result is a hover effect around the editable properties. When they're clicked, the editor is sent to the "Content" view:
 
