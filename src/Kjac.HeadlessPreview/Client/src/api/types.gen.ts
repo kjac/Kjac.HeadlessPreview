@@ -5,17 +5,17 @@ export type DocumentPreviewUrlInfoModel = {
     info?: (string) | null;
 };
 
-export type GetHeadlessPreviewPreviewSupportedData = {
+export type GetHeadlessPreviewDocumentTypePreviewSupportedData = {
     query?: {
         documentTypeId?: string;
     };
 };
 
-export type GetHeadlessPreviewPreviewSupportedResponse = (boolean);
+export type GetHeadlessPreviewDocumentTypePreviewSupportedResponse = (boolean);
 
-export type GetHeadlessPreviewPreviewSupportedError = (unknown);
+export type GetHeadlessPreviewDocumentTypePreviewSupportedError = (unknown);
 
-export type GetHeadlessPreviewPreviewUrlInfoData = {
+export type GetHeadlessPreviewDocumentPreviewUrlInfoData = {
     query?: {
         culture?: string;
         documentId?: string;
@@ -23,6 +23,6 @@ export type GetHeadlessPreviewPreviewUrlInfoData = {
     };
 };
 
-export type GetHeadlessPreviewPreviewUrlInfoResponse = ((DocumentPreviewUrlInfoModel));
+export type GetHeadlessPreviewDocumentPreviewUrlInfoResponse = ((DocumentPreviewUrlInfoModel));
 
-export type GetHeadlessPreviewPreviewUrlInfoError = (unknown);
+export type GetHeadlessPreviewDocumentPreviewUrlInfoError = (unknown);

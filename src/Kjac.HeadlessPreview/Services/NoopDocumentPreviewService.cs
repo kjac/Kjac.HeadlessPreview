@@ -14,7 +14,4 @@ public class NoopDocumentPreviewService : IDocumentPreviewService
                     Check the documentation in the package GitHub repository for details.
                     """
         });
-
-    public Task<bool> PreviewSupportedAsync(IContentType documentType)
-        => Task.FromResult(true);
 }

@@ -111,7 +111,7 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
                     ? activeVariant
                     : undefined;
 
-                const previewUrlResponse = await DocumentService.getHeadlessPreviewPreviewUrlInfo({
+                const previewUrlResponse = await DocumentService.getHeadlessPreviewDocumentPreviewUrlInfo({
                     query: {
                         documentId: this._documentId!,
                         culture: this._activeVariant?.culture ?? undefined,

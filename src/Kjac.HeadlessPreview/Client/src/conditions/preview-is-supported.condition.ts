@@ -7,9 +7,9 @@ import type {
 } from '@umbraco-cms/backoffice/extension-api';
 import {UmbConditionBase} from '@umbraco-cms/backoffice/extension-registry';
 import {
-    DocumentService,
-    type GetHeadlessPreviewPreviewSupportedError,
-    type GetHeadlessPreviewPreviewSupportedResponse
+    DocumentTypeService,
+    type GetHeadlessPreviewDocumentTypePreviewSupportedError,
+    type GetHeadlessPreviewDocumentTypePreviewSupportedResponse
 } from "../api";
 import { RequestResult } from '@hey-api/client-fetch';
 
@@ -39,12 +39,12 @@ export class PreviewIsSupportedCondition
 // multiple simultaneous API requests will be made for the same resource, since the condition is used in multiple places.
 // this workaround ensures we only create a single API request and yield the same promise for all consumers of the condition. 
 class RequestManager {
-    private static _activeRequest?: RequestResult<GetHeadlessPreviewPreviewSupportedResponse, GetHeadlessPreviewPreviewSupportedError, boolean>;
+    private static _activeRequest?: RequestResult<GetHeadlessPreviewDocumentTypePreviewSupportedResponse, GetHeadlessPreviewDocumentTypePreviewSupportedError, boolean>;
 
     public static request(documentTypeId: string)
     {
         if (!this._activeRequest) {
-            this._activeRequest = DocumentService.getHeadlessPreviewPreviewSupported({
+            this._activeRequest = DocumentTypeService.getHeadlessPreviewDocumentTypePreviewSupported({
                 query: {
                     documentTypeId: documentTypeId
                 }

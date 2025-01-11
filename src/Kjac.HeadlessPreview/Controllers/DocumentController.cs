@@ -3,12 +3,14 @@ using Kjac.HeadlessPreview.Models;
 using Kjac.HeadlessPreview.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Umbraco.Cms.Api.Management.Routing;
 using Umbraco.Cms.Core.Services;
 
 namespace Kjac.HeadlessPreview.Controllers
 {
     [ApiVersion("1.0")]
     [ApiExplorerSettings(GroupName = "Document")]
+    [VersionedApiBackOfficeRoute($"{Constants.ApiName}/document")]
     public sealed class DocumentController : HeadlessPreviewControllerBase
     {
         private readonly IContentService _contentService;
@@ -38,20 +40,6 @@ namespace Kjac.HeadlessPreview.Controllers
 
             var previewUrlInfo = await _documentPreviewService.PreviewUrlInfoAsync(document, culture, segment);
             return Ok(previewUrlInfo);
-        }
-
-        [HttpGet("preview-supported")]
-        [ProducesResponseType<bool>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> PreviewSupported(Guid documentTypeId)
-        {
-            var documentType = await _contentTypeService.GetAsync(documentTypeId);
-            if (documentType is null)
-            {
-                return BadRequest("Document type could not be found.");
-            }
-
-            var supported = await _documentPreviewService.PreviewSupportedAsync(documentType);
-            return Ok(supported);
         }
     }
 }

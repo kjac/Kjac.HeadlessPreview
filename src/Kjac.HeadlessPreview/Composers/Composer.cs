@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Kjac.HeadlessPreview.Models.Configuration;
 using Kjac.HeadlessPreview.Services;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -21,7 +22,11 @@ namespace Kjac.HeadlessPreview.Composers
             builder.Services.AddSingleton<ISchemaIdHandler, HeadlessPreviewSchemaIdHandler>();
             builder.Services.AddSingleton<IOperationIdHandler, HeadlessPreviewOperationIdHandler>();
             builder.Services.AddUnique<IDocumentPreviewService, NoopDocumentPreviewService>();
+            builder.Services.AddUnique<IDocumentTypePreviewService, ConfigurableDocumentTypePreviewService>();
             builder.Services.ConfigureOptions<HeadlessPreviewSwaggerGenOptions>();
+            builder.Services.Configure<HeadlessPreviewConfiguration>(
+                builder.Config.GetSection(nameof(HeadlessPreview))
+            );
         }
 
         private class HeadlessPreviewSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
