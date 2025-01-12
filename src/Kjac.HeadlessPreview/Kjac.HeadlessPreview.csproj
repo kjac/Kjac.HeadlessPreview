@@ -4,14 +4,20 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+    <Authors>Kenn Jacobsen</Authors>
+    <PackageProjectUrl>https://github.com/kjac/Kjac.HeadlessPreview</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Version>1.0.0-alpha1</Version>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>Kjac.HeadlessPreview</PackageId>
     <Product>Kjac.HeadlessPreview</Product>
-    <Title>Kjac.HeadlessPreview</Title>
+    <Title>Headless Preview</Title>
+    <Description>The Headless Preview package offers an alternative to the default preview functionality of Umbraco</Description>
+    <PackageTags>umbraco plugin package preview headless delivery-api umbraco-marketplace </PackageTags>
   </PropertyGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Umbraco.Cms.Web.Website" Version="*" />
@@ -26,10 +32,19 @@
 
     <!-- However make the Umbraco-package.json included for dotnet pack or nuget package and visible to the solution -->
     <None Include="Client\public\umbraco-package.json" Pack="false" />
+
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\nuget\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+      <Link>icon.png</Link>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="wwwroot\App_Plugins\" />
-  </ItemGroup>
-  
 </Project>

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
+  "AuthorDetails": {
+    "Name": "Kenn Jacobsen"
+  },
+  "Category": "Headless",
+  "Description": "The Headless Preview package offers an alternative to the default preview functionality of Umbraco.",
+  "DocumentationUrl": "https://github.com/kjac/Kjac.HeadlessPreview",
+  "LicenseTypes": [ "Free" ],
+  "IssueTrackerUrl": "https://github.com/kjac/Kjac.HeadlessPreview/issues",
+  "PackageType": "Package",
+  "Screenshots": [
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/kjac/Kjac.HeadlessPreview/blob/main/docs/ui-extensions.png",
+      "Caption": "The Headless Preview UI extensions."
+    },
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/kjac/Kjac.HeadlessPreview/main/docs/preview-blog.png",
+      "Caption": "Previewing in the back-office."
+    },
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/kjac/Kjac.HeadlessPreview/main/docs/toolbar.png",
+      "Caption": "Built-in viewports for previewing."
+    }
+  ],
+  "Tags": [ "Headless", "Delivery API", "Preview" ],
+  "Title": "Headless Preview",
+  "RelatedPackages": [
+    {
+      "Description": "No-code tools for the Umbraco Delivery API. Allows for no-code definition of Delivery API filters and sorters, automatic CORS policies for API consumers and more.",
+      "PackageId": "Kjac.NoCode.DeliveryApi"
+    }
+  ]
+}
