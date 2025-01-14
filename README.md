@@ -4,6 +4,17 @@ The Headless Preview package offers an alternative to the default preview functi
 
 This package has been built specifically for previewing headless sites, where content routing and rendering is not exclusively (or not at all) handled by Umbraco.
 
+## Installing the package
+
+> [!IMPORTANT]
+> First and foremost, make sure the Delivery API is enabled. See the [Umbraco Delivery API docs](https://docs.umbraco.com/umbraco-cms/reference/content-delivery-api) for details.
+
+The package is installed from [NuGet](https://www.nuget.org/packages/Kjac.HeadlessPreview):
+
+```bash
+dotnet add package Kjac.HeadlessPreview
+```
+
 ## Basic functionality
 
 The package replaces the "Save and preview" button in the document workspace with a custom implementation, and adds a "Preview" view to the workspace as well:
