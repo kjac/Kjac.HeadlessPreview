@@ -8,7 +8,8 @@ window.onload = () => {
 
     const elements = document.querySelectorAll('*[umb-preview-edit]')
     if (!elements.length) {
-        // nothing to edit here
+        // nothing to edit here - tell Umbraco we're ready
+        umbPreviewMessage('init', 'ready');
         return;
     }
 
