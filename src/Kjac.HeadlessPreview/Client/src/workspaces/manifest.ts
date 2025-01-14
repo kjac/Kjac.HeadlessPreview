@@ -13,7 +13,7 @@ export const manifests: Array<UmbExtensionManifest> = [
         type: 'workspaceContext',
         alias: `${PACKAGE_ALIAS}.Workspace.Context`,
         name: `${PACKAGE_NAME} Workspace Context`,
-        api: () => import('./workspace.context.ts'),
+        api: () => import('./contexts/workspace.context.ts'),
         conditions: [
             {
                 alias: UMB_WORKSPACE_CONDITION_ALIAS,

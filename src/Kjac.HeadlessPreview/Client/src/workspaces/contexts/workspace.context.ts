@@ -1,7 +1,7 @@
 import {UmbContextBase} from "@umbraco-cms/backoffice/class-api";
 import {UmbContextToken} from "@umbraco-cms/backoffice/context-api";
-import {PACKAGE_ALIAS} from "../constants.ts";
-import {PreviewDevice} from "../models/previewDevice.ts";
+import {PACKAGE_ALIAS} from "../../constants.ts";
+import {PreviewDevice} from "../../models/previewDevice.ts";
 import {UmbControllerHost} from "@umbraco-cms/backoffice/controller-api";
 
 export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
