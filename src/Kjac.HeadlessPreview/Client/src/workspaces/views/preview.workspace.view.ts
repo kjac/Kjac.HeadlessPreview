@@ -102,6 +102,15 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
             this._documentTypeId = document.documentType.unique;
             const knownVariants = document.variants.filter(variant => !!variant.createDate);
 
+
+            this.consumeContext(HEADLESS_PREVIEW_CONTEXT_TOKEN, (instance) => {
+                console.log("Consumed headless context", instance)
+                this._workspaceContext = instance;
+                // at this time, workspace contexts retain their state between different documents. let's make sure we clear our relevant document specific state.
+                this._workspaceContext.initializeContext(this._documentId!);
+                this._device = this._workspaceContext.getLastDevice() ?? this._device;
+            });
+
             this.observe(instance.splitView.activeVariantsInfo, async (activeVariants) => {
                 const activeVariant = activeVariants.length ? activeVariants[0] : undefined;
                 this._activeVariant = activeVariant && knownVariants.find(variant =>
@@ -126,11 +135,6 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
                     this._previewUrlInfo = previewUrlResponse?.data;
                 }
             })
-        });
-
-        this.consumeContext(HEADLESS_PREVIEW_CONTEXT_TOKEN, (instance) => {
-            this._workspaceContext = instance;
-            this._device = this._workspaceContext.getLastDevice() ?? this._device;
         });
 
         this.consumeContext(UMB_APP_CONTEXT, (instance) => {

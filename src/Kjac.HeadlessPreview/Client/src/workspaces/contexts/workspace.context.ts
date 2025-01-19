@@ -1,10 +1,12 @@
-import {UmbContextBase} from "@umbraco-cms/backoffice/class-api";
-import {UmbContextToken} from "@umbraco-cms/backoffice/context-api";
-import {PACKAGE_ALIAS} from "../../constants.ts";
-import {PreviewDevice} from "../../models/previewDevice.ts";
-import {UmbControllerHost} from "@umbraco-cms/backoffice/controller-api";
+import {UmbContextBase} from '@umbraco-cms/backoffice/class-api';
+import {UmbContextToken} from '@umbraco-cms/backoffice/context-api';
+import {PACKAGE_ALIAS} from '../../constants.ts';
+import {PreviewDevice} from '../../models/previewDevice.ts';
+import {UmbControllerHost} from '@umbraco-cms/backoffice/controller-api';
+import { UmbEntityUnique } from '@umbraco-cms/backoffice/entity';
 
 export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
+    private _lastDocumentId?: UmbEntityUnique;
     private _lastDevice?: PreviewDevice;
     private _lastScrollPos?: string;
 
@@ -12,6 +14,14 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
         super(host, HEADLESS_PREVIEW_CONTEXT_TOKEN);
     }
 
+    initializeContext(documentId: UmbEntityUnique) {
+        if (this._lastDocumentId === documentId) {
+            return;
+        }
+        this._lastScrollPos = undefined;
+        this._lastDocumentId = documentId;
+    }
+    
     updateLastDevice = (device: PreviewDevice) => {
         this._lastDevice = device
     };
