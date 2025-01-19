@@ -5,7 +5,7 @@ import {UMB_APP_CONTEXT} from '@umbraco-cms/backoffice/app';
 import {UmbEntityUnique} from '@umbraco-cms/backoffice/entity';
 import {ActiveVariant} from '@umbraco-cms/backoffice/workspace';
 import {UMB_INVARIANT_CULTURE} from '@umbraco-cms/backoffice/variant';
-import {BACK_OFFICE_PREVIEW_CONTEXT_TOKEN, WorkspaceContext} from '../workspace.context.ts';
+import {HEADLESS_PREVIEW_CONTEXT_TOKEN, WorkspaceContext} from '../contexts/workspace.context.ts';
 import {PreviewDevice} from '../../models/previewDevice.ts';
 import {UmbDocumentTypeDetailRepository} from '@umbraco-cms/backoffice/document-type';
 import {DocumentPreviewUrlInfoModel, DocumentService} from '../../api';
@@ -128,7 +128,7 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
             })
         });
 
-        this.consumeContext(BACK_OFFICE_PREVIEW_CONTEXT_TOKEN, (instance) => {
+        this.consumeContext(HEADLESS_PREVIEW_CONTEXT_TOKEN, (instance) => {
             this._workspaceContext = instance;
             this._device = this._workspaceContext.getLastDevice() ?? this._device;
         });

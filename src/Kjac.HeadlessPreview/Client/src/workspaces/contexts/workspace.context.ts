@@ -9,7 +9,7 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
     private _lastScrollPos?: string;
 
     constructor(host: UmbControllerHost) {
-        super(host, BACK_OFFICE_PREVIEW_CONTEXT_TOKEN);
+        super(host, HEADLESS_PREVIEW_CONTEXT_TOKEN);
     }
 
     updateLastDevice = (device: PreviewDevice) => {
@@ -27,6 +27,6 @@ export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
 
 export const api = WorkspaceContext;
 
-export const BACK_OFFICE_PREVIEW_CONTEXT_TOKEN = new UmbContextToken<WorkspaceContext>(
+export const HEADLESS_PREVIEW_CONTEXT_TOKEN = new UmbContextToken<WorkspaceContext>(
     `${PACKAGE_ALIAS}.Workspace.Context`
 );
