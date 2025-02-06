@@ -43,7 +43,6 @@ export class DocumentSaveAndPreviewWorkspaceAction extends UmbSubmitWorkspaceAct
 
         const previewUrl = `${window.location.href.replace(match.groups?.view ?? '', '')}/view/preview`
         if (window.location.href !== previewUrl) {
-            // TODO: is there a more graceful way to navigate? ideally something that allows activating the "Preview" workspace view?
             window.history.pushState(null, '', previewUrl)
         }
     }

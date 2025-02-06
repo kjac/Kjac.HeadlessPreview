@@ -8,7 +8,7 @@
     <PackageProjectUrl>https://github.com/kjac/Kjac.HeadlessPreview</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>1.0.0-alpha1</Version>
+    <Version>1.0.0-beta1</Version>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -20,10 +20,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Umbraco.Cms.Web.Website" Version="*" />
-    <PackageReference Include="Umbraco.Cms.Web.Common" Version="*" />
-    <PackageReference Include="Umbraco.Cms.Api.Common" Version="*" />
-    <PackageReference Include="Umbraco.Cms.Api.Management" Version="*" />
+    <PackageReference Include="Umbraco.Cms.Web.Website" Version="15.2.0" />
+    <PackageReference Include="Umbraco.Cms.Web.Common" Version="15.2.0" />
+    <PackageReference Include="Umbraco.Cms.Api.Common" Version="15.2.0" />
+    <PackageReference Include="Umbraco.Cms.Api.Management" Version="15.2.0" />
   </ItemGroup>
   
   <ItemGroup>
