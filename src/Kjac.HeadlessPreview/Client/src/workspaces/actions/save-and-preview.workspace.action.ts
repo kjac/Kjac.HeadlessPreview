@@ -41,7 +41,7 @@ export class DocumentSaveAndPreviewWorkspaceAction extends UmbSubmitWorkspaceAct
             return;
         }
 
-        const previewUrl = `${window.location.href.replace(match.groups?.view ?? '', '')}/view/preview`
+        const previewUrl = `${window.location.href.replace(match.groups?.view ?? '', '')}/view/headless-preview`
         if (window.location.href !== previewUrl) {
             window.history.pushState(null, '', previewUrl)
         }

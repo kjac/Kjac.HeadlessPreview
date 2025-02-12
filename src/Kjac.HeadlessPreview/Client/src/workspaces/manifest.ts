@@ -28,7 +28,7 @@ export const manifests: Array<UmbExtensionManifest> = [
         name: `${PACKAGE_NAME} Workspace View`,
         meta: {
             label: '#general_preview',
-            pathname: 'preview',
+            pathname: 'headless-preview',
             icon: 'icon-eye'
         },
         conditions: [

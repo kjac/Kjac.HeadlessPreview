@@ -331,7 +331,7 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
             break;
         }
 
-        let editUrl = window.location.href.replace('/view/preview', '/view/content');
+        let editUrl = window.location.href.replace('/view/headless-preview', '/view/content');
         if (tabName) {
             editUrl = `${editUrl}/tab/${tabName.toLowerCase().replace(' ', '-')}`;
         }
