@@ -293,3 +293,19 @@ The result is a hover effect around the editable properties. When they're clicke
 For your viewing pleasure, here's a screencast that shows it all in action 😉
 
 [Screencast of the package in action](https://github.com/user-attachments/assets/ba56be63-688b-4fb0-8a0d-491cbd405b79)
+
+## Known limitations
+
+### Segment support is missing
+
+At this point, the Umbraco UI does not support segments, which means this package can't support them either.
+
+The package is prepared for segments, so theoretically, segmented preview should start working when segments become part of the UI - time will tell 🤞
+
+### Collections
+
+The built-in "Save and preview" functionality has an odd tendency to close the active document when it's been opened in infinite editing from a Collection View (formerly known as List View).
+
+This makes for a really weird user experience, specially combined with preview, because the document closes before preview can be engaged - which means one will effectively preview the parent document 🤦
+
+Therefore, Headless Preview is actively disabled for now. When the Umbraco UI stops closing documents, Headless Preview will be enabled for Collection Views.
