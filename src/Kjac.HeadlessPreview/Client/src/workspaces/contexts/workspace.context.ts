@@ -5,7 +5,7 @@ import {PreviewDevice} from '../../models/previewDevice.ts';
 import {UmbControllerHost} from '@umbraco-cms/backoffice/controller-api';
 import { UmbEntityUnique } from '@umbraco-cms/backoffice/entity';
 
-export class WorkspaceContext extends UmbContextBase<WorkspaceContext> {
+export class WorkspaceContext extends UmbContextBase {
     private _lastDocumentId?: UmbEntityUnique;
     private _lastDevice?: PreviewDevice;
     private _lastScrollPos?: string;

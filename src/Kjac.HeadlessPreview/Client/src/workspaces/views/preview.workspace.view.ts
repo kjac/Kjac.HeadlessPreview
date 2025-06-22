@@ -1,7 +1,6 @@
 import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import {css, customElement, html, nothing, query, repeat, state, when} from '@umbraco-cms/backoffice/external/lit';
 import {UMB_DOCUMENT_WORKSPACE_CONTEXT} from '@umbraco-cms/backoffice/document';
-import {UMB_APP_CONTEXT} from '@umbraco-cms/backoffice/app';
 import {UmbEntityUnique} from '@umbraco-cms/backoffice/entity';
 import {ActiveVariant} from '@umbraco-cms/backoffice/workspace';
 import {UMB_INVARIANT_CULTURE} from '@umbraco-cms/backoffice/variant';
@@ -9,6 +8,7 @@ import {HEADLESS_PREVIEW_CONTEXT_TOKEN, WorkspaceContext} from '../contexts/work
 import {PreviewDevice} from '../../models/previewDevice.ts';
 import {UmbDocumentTypeDetailRepository} from '@umbraco-cms/backoffice/document-type';
 import {DocumentPreviewUrlInfoModel, DocumentService} from '../../api';
+import {UMB_SERVER_CONTEXT} from '@umbraco-cms/backoffice/server';
 
 @customElement('kjac-headless-preview-workspace-view')
 export default class PreviewWorkspaceViewElement extends UmbLitElement {
@@ -93,7 +93,7 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
         this._device = this._devices[0];
 
         this.consumeContext(UMB_DOCUMENT_WORKSPACE_CONTEXT, (instance) => {
-            const document = instance.getData();
+            const document = instance?.getData();
             if (!document) {
                 console.error("No document found in the workspace context, aborting preview.")
                 return;
@@ -104,41 +104,42 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
 
 
             this.consumeContext(HEADLESS_PREVIEW_CONTEXT_TOKEN, (instance) => {
-                console.log("Consumed headless context", instance)
                 this._workspaceContext = instance;
                 // at this time, workspace contexts retain their state between different documents. let's make sure we clear our relevant document specific state.
-                this._workspaceContext.initializeContext(this._documentId!);
-                this._device = this._workspaceContext.getLastDevice() ?? this._device;
+                this._workspaceContext?.initializeContext(this._documentId!);
+                this._device = this._workspaceContext?.getLastDevice() ?? this._device;
             });
 
-            this.observe(instance.splitView.activeVariantsInfo, async (activeVariants) => {
-                const activeVariant = activeVariants.length ? activeVariants[0] : undefined;
-                this._activeVariant = activeVariant && knownVariants.find(variant =>
-                    (variant.culture === activeVariant.culture || variant.culture === null && activeVariant.culture === UMB_INVARIANT_CULTURE)
-                    && variant.segment === activeVariant.segment
-                )
-                    ? activeVariant
-                    : undefined;
+            if(instance) {
+                this.observe(instance.splitView.activeVariantsInfo, async (activeVariants) => {
+                    const activeVariant = activeVariants.length ? activeVariants[0] : undefined;
+                    this._activeVariant = activeVariant && knownVariants.find(variant =>
+                        (variant.culture === activeVariant.culture || variant.culture === null && activeVariant.culture === UMB_INVARIANT_CULTURE)
+                        && variant.segment === activeVariant.segment
+                    )
+                        ? activeVariant
+                        : undefined;
 
-                const previewUrlResponse = await DocumentService.getHeadlessPreviewDocumentPreviewUrlInfo({
-                    query: {
-                        documentId: this._documentId!,
-                        culture: this._activeVariant?.culture ?? undefined,
-                        segment: this._activeVariant?.segment ?? undefined
+                    const previewUrlResponse = await DocumentService.getHeadlessPreviewDocumentPreviewUrlInfo({
+                        query: {
+                            documentId: this._documentId!,
+                            culture: this._activeVariant?.culture ?? undefined,
+                            segment: this._activeVariant?.segment ?? undefined
+                        }
+                    })
+
+                    if (previewUrlResponse.error) {
+                        console.error("The preview URL info endpoint yielded an error", previewUrlResponse.error);
                     }
-                })
-
-                if (previewUrlResponse.error) {
-                    console.error("The preview URL info endpoint yielded an error", previewUrlResponse.error);
-                }
-                else {
-                    this._previewUrlInfo = previewUrlResponse?.data;
-                }
-            })
+                    else {
+                        this._previewUrlInfo = previewUrlResponse?.data;
+                    }
+                });
+            }
         });
 
-        this.consumeContext(UMB_APP_CONTEXT, (instance) => {
-            this._serverUrl = instance.getServerUrl();
+        this.consumeContext(UMB_SERVER_CONTEXT, (instance) => {
+            this._serverUrl = instance?.getServerUrl();
         });
     }
 

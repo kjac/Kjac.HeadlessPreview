@@ -8,7 +8,6 @@ import type {
 import {UmbConditionBase} from '@umbraco-cms/backoffice/extension-registry';
 import {
     DocumentTypeService,
-    type GetHeadlessPreviewDocumentTypePreviewSupportedError,
     type GetHeadlessPreviewDocumentTypePreviewSupportedResponse
 } from "../api";
 import { RequestResult } from '@hey-api/client-fetch';
@@ -22,7 +21,7 @@ export class PreviewIsSupportedCondition
         super(host, args);
 
         this.consumeContext(UMB_DOCUMENT_WORKSPACE_CONTEXT, async (context) => {
-            const documentTypeId = context.getContentTypeUnique();
+            const documentTypeId = context?.getContentTypeUnique();
             if (!documentTypeId) {
                 console.warn('Could not find the document type of the current document, preview is disabled.');
                 this.permitted = false;
@@ -39,7 +38,7 @@ export class PreviewIsSupportedCondition
 // multiple simultaneous API requests will be made for the same resource, since the condition is used in multiple places.
 // this workaround ensures we only create a single API request and yield the same promise for all consumers of the condition. 
 class RequestManager {
-    private static _activeRequest?: RequestResult<GetHeadlessPreviewDocumentTypePreviewSupportedResponse, GetHeadlessPreviewDocumentTypePreviewSupportedError, boolean>;
+    private static _activeRequest?: RequestResult<GetHeadlessPreviewDocumentTypePreviewSupportedResponse, unknown, boolean>;
 
     public static request(documentTypeId: string)
     {

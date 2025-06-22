@@ -18,7 +18,7 @@ export class ListViewEditModalIsNotActiveCondition
         super(host, args);
 
         this.consumeContext(UMB_DOCUMENT_WORKSPACE_CONTEXT, (context) => {
-            this.permitted = context.modalContext === undefined;
+            this.permitted = context?.modalContext === undefined;
         });
     }
 }

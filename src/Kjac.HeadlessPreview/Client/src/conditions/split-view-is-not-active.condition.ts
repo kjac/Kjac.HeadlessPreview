@@ -15,9 +15,9 @@ export class SplitViewIsNotActiveCondition
 
         this.consumeContext(UMB_DOCUMENT_WORKSPACE_CONTEXT, (context) => {
             this.observe(
-                context.splitView.activeVariantsInfo,
+                context?.splitView.activeVariantsInfo,
                 (activeVariants) => {
-                    this.permitted = activeVariants.length === 1;
+                    this.permitted = activeVariants?.length === 1;
                 }
             );
         });
