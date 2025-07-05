@@ -205,17 +205,29 @@ window.addEventListener(
 
 Another part of the above-mentioned communication protocol enables the editors to click properties within the preview to edit them.
 
-To implement this, first add `umb-preview-edit='[property alias]'` attributes to the preview rendering for the relevant document properties - for example:
+To implement this, first add `umb-preview-edit='[options]'` attributes to the preview rendering for the relevant document properties. The attribute value is expected to follow the pattern `PropertyAlias[:EditMode[:ModalSize]]`, where:
+
+- `PropertyAlias` (required): The Umbraco alias of the property to edit.
+- `EditMode` (optional): How the property should be edited:
+  - `default` brings the editors back to the Umbraco "Content" view.
+  - `modal` opens the property for editing in a modal overlay.
+- `ModalSize` (optional): If `EditMode` is `modal`, this controls the size of the modal.
+  - Applicable modal sizes are `small`, `medium`, `large` and `full`. Default is `large`. 
+
+
+For example:
 
 ```tsx
 export default function PostHeader({ title, coverImage, date, author }: Props) {
    return (
            <>
               <PostTitle>{title}</PostTitle>
+              {/* edit the 'author' property in the Umbraco "Content" view */}
               <div className="hidden md:block md:mb-12" umb-preview-edit="author">
                  <Avatar author={author}/>
               </div>
-              <div className="mb-8 md:mb-16 sm:mx-0" umb-preview-edit="coverImage">
+              {/* edit the 'coverImage' property in a medium sized modal overlay */}
+              <div className="mb-8 md:mb-16 sm:mx-0" umb-preview-edit="coverImage:modal:medium">
                  <CoverImage title={title} coverImage={coverImage}/>
               </div>
               <div className="max-w-2xl mx-auto">
@@ -283,7 +295,7 @@ window.onload = () => {
 > [!IMPORTANT]
 > Notice the overlap with the previous example script. A combined script can be found [right here](https://github.com/kjac/Kjac.HeadlessPreview/blob/main/src/Kjac.HeadlessPreview.Site/wwwroot/scripts/umb.preview.js).
 
-The result is a hover effect around the editable properties. When they're clicked, the editor is sent to the "Content" view:
+The result is a hover effect around the editable properties. When they're clicked, the editor is either sent to the Umbraco "Content" view, or a modal overlay opens up for editing the property:
 
 !["Click to edit" example](docs/click-to-edit.png)
 
@@ -296,11 +308,17 @@ For your viewing pleasure, here's a screencast that shows it all in action 😉
 
 ## Known limitations
 
-### Segment support is missing
+### Certain property editors vs. modal editing
 
-At this point, the Umbraco UI does not support segments, which means this package can't support them either.
+For some property editors, the modal overlay editing just does not work. The Tags property editor is one, there might be others.
 
-The package is prepared for segments, so theoretically, segmented preview should start working when segments become part of the UI - time will tell 🤞
+If all things fail, revert to using the `default` editing mode.
+
+### Segment support is untested
+
+The V16 UI brought back segment support. At this point, segments are still largely untested with this package.
+
+It should work, though - let me know if you run into problems with segments.
 
 ### Collections
 
