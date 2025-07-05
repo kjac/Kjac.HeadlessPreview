@@ -1,6 +1,6 @@
 import {UmbLitElement} from '@umbraco-cms/backoffice/lit-element';
 import {css, customElement, html, nothing, query, repeat, state, when} from '@umbraco-cms/backoffice/external/lit';
-import {UMB_DOCUMENT_WORKSPACE_CONTEXT} from '@umbraco-cms/backoffice/document';
+import {UMB_DOCUMENT_WORKSPACE_CONTEXT, UmbDocumentWorkspaceContext} from '@umbraco-cms/backoffice/document';
 import {UmbEntityUnique} from '@umbraco-cms/backoffice/entity';
 import {ActiveVariant} from '@umbraco-cms/backoffice/workspace';
 import {UMB_INVARIANT_CULTURE} from '@umbraco-cms/backoffice/variant';
@@ -9,7 +9,9 @@ import {PreviewDevice} from '../../models/previewDevice.ts';
 import {UmbDocumentTypeDetailRepository} from '@umbraco-cms/backoffice/document-type';
 import {DocumentPreviewUrlInfoModel, DocumentService} from '../../api';
 import {UMB_SERVER_CONTEXT} from '@umbraco-cms/backoffice/server';
-
+import {HEADLESS_PREVIEW_EDIT_PROPERTY_MODAL_TOKEN} from './edit-property.modal.view.ts';
+import {UmbModalRouteRegistrationController} from '@umbraco-cms/backoffice/router';
+import type {UUIModalSidebarSize} from '@umbraco-cms/backoffice/external/uui';
 @customElement('kjac-headless-preview-workspace-view')
 export default class PreviewWorkspaceViewElement extends UmbLitElement {
     private _serverUrl?: string;
@@ -18,7 +20,12 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
     private _webSocket?: WebSocket;
     private _activeVariant?: ActiveVariant;
     private _workspaceContext?: WorkspaceContext;
+    private _documentWorkspaceContext?: UmbDocumentWorkspaceContext;
     private _iframe?: HTMLIFrameElement;
+    private _workspaceModal?: UmbModalRouteRegistrationController<
+        typeof HEADLESS_PREVIEW_EDIT_PROPERTY_MODAL_TOKEN.DATA,
+        typeof HEADLESS_PREVIEW_EDIT_PROPERTY_MODAL_TOKEN.VALUE
+    >;
 
     @state()
     private _maximized: boolean = false;
@@ -98,6 +105,7 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
                 console.error("No document found in the workspace context, aborting preview.")
                 return;
             }
+            this._documentWorkspaceContext = instance;
             this._documentId = document.unique;
             this._documentTypeId = document.documentType.unique;
             const knownVariants = document.variants.filter(variant => !!variant.createDate);
@@ -298,6 +306,11 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
     }
 
     private async _editProperty(alias: string) {
+        const parts = alias.split(':');
+        alias = parts[0];
+        const mode = parts.length > 1 ? parts[1] : 'default';
+        const modalSize = (mode == 'modal' && parts.length == 3 ? parts[2] : 'large') as UUIModalSidebarSize;
+        
         if (!this._documentId || !this._documentTypeId) {
             console.error('No document or document type ID found yet. Cannot edit property. This really should not have happened.')
             return;
@@ -317,28 +330,56 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
             return;
         }
 
-        let tabName = null;
-        let containerIdentifier = propertyType.container;
-        while (containerIdentifier?.id) {
-            const container = documentType.containers.find(c => c.id === containerIdentifier!.id);
-            if (!container) {
+        if (mode === 'default') {
+            let tabName = null;
+            let containerIdentifier = propertyType.container;
+            while (containerIdentifier?.id) {
+                const container = documentType.containers.find(c => c.id === containerIdentifier!.id);
+                if (!container) {
+                    break;
+                }
+                if (container.type !== 'Tab') {
+                    containerIdentifier = container.parent;
+                    continue;
+                }
+                tabName = container.name;
                 break;
             }
-            if (container.type !== 'Tab') {
-                containerIdentifier = container.parent;
-                continue;
+
+            let editUrl = window.location.href.replace('/view/headless-preview', '/view/content');
+            if (tabName) {
+                editUrl = `${editUrl}/tab/${tabName.toLowerCase().replace(' ', '-')}`;
             }
-            tabName = container.name;
-            break;
+
+            window.history.pushState(null, '', editUrl);
+            return;
         }
 
-        let editUrl = window.location.href.replace('/view/headless-preview', '/view/content');
-        if (tabName) {
-            editUrl = `${editUrl}/tab/${tabName.toLowerCase().replace(' ', '-')}`;
+        if (mode.startsWith('modal')) {
+            this._workspaceModal?.destroy();
+            this._workspaceModal = new UmbModalRouteRegistrationController(
+                this,
+                HEADLESS_PREVIEW_EDIT_PROPERTY_MODAL_TOKEN
+            )
+            .onSetup(() => {
+                return {
+                    data: {
+                        alias: alias
+                    },
+                    value: {},
+                    modal: {
+                        size: modalSize
+                    }
+                }
+            })
+            .onSubmit(async _ => {
+                await this._documentWorkspaceContext?.requestSubmit()
+            })
+            .observeRouteBuilder((routeBuilder) => {
+                const route = routeBuilder({key: alias});
+                window.history.pushState(null, '', route);
+            });
         }
-
-        // TODO: is there a more graceful way to navigate? ideally something that allows activating the "Edit" workspace view for the specific tab?
-        window.history.pushState(null, '', editUrl);
     }
 
     private async _messageHandler(message: MessageEvent<any>) {
@@ -347,7 +388,7 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
         }
 
         const parts = message.data.split('|');
-        if (parts.length !== 3) {
+        if (parts.length !== 3 && parts.length !== 4) {
             console.warn('Malformed message received', message);
             return;
         }

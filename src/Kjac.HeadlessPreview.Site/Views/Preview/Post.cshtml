@@ -26,12 +26,12 @@
 <div>
     <h1>@Model.Name [@Model.ContentType]</h1>
 
-    <fieldset umb-preview-edit="author">
+    <fieldset umb-preview-edit="author:modal:medium">
         <legend>Author</legend>
         @Model.Properties.Author.Name
     </fieldset>
 
-    <fieldset umb-preview-edit="coverImage">
+    <fieldset umb-preview-edit="coverImage:modal:medium">
         <legend>Cover Image</legend>
         <img src="@Model.Properties.CoverImage[0].Url" height="200px" />
     </fieldset>

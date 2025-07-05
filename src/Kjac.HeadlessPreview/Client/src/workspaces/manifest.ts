@@ -73,4 +73,10 @@ export const manifests: Array<UmbExtensionManifest> = [
             }
         ],
     },
+    {
+        type: 'modal',
+        alias: `${PACKAGE_ALIAS}.Modal.EditProperty`,
+        name: `${PACKAGE_NAME} Edit Property Modal View`,
+        element: () => import('./views/edit-property.modal.view.ts')
+    }
 ];

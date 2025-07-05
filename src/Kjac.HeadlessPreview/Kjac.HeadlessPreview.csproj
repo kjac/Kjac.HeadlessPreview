@@ -20,10 +20,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Umbraco.Cms.Web.Website" Version="16.0.0" />
-    <PackageReference Include="Umbraco.Cms.Web.Common" Version="16.0.0" />
-    <PackageReference Include="Umbraco.Cms.Api.Common" Version="16.0.0" />
-    <PackageReference Include="Umbraco.Cms.Api.Management" Version="16.0.0" />
+    <PackageReference Include="Umbraco.Cms.Web.Website" Version="[16.0.0, 17)" />
+    <PackageReference Include="Umbraco.Cms.Web.Common" Version="[16.0.0, 17)" />
+    <PackageReference Include="Umbraco.Cms.Api.Common" Version="[16.0.0, 17)" />
+    <PackageReference Include="Umbraco.Cms.Api.Management" Version="[16.0.0, 17)" />
   </ItemGroup>
   
   <ItemGroup>
