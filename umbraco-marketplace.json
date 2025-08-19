@@ -11,7 +11,7 @@
   "PackageType": "Package",
   "Screenshots": [
     {
-      "ImageUrl": "https://raw.githubusercontent.com/kjac/Kjac.HeadlessPreview/blob/main/docs/ui-extensions.png",
+      "ImageUrl": "https://raw.githubusercontent.com/kjac/Kjac.HeadlessPreview/main/docs/ui-extensions.png",
       "Caption": "The Headless Preview UI extensions."
     },
     {
