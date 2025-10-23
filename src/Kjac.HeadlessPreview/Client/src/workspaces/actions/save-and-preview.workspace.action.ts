@@ -35,7 +35,7 @@ export class DocumentSaveAndPreviewWorkspaceAction extends UmbSubmitWorkspaceAct
         await super.execute();
         const workspaceContext = await this.getContext(UMB_DOCUMENT_WORKSPACE_CONTEXT);
         const unique = workspaceContext?.getUnique();
-        var currentLocation = window.location.href.replace(/\/+$/, '');
+        const currentLocation = window.location.href.replace(/\/+$/, '');
         const match = currentLocation.match(new RegExp(`.*\/${unique}\/(?<variant>[\\w-]*)(?<view>\\S*)`))
         if (!match || !match.length) {
             console.error('Could not match against current location, unable to switch to preview.')
