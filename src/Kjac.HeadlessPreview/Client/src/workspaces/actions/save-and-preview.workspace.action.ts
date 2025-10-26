@@ -35,14 +35,15 @@ export class DocumentSaveAndPreviewWorkspaceAction extends UmbWorkspaceActionBas
         await super.execute();
         const workspaceContext = await this.getContext(UMB_DOCUMENT_WORKSPACE_CONTEXT);
         const unique = workspaceContext?.getUnique();
-        const match = window.location.href.match(new RegExp(`.*\/${unique}\/(?<variant>[\\w-]*)(?<view>\\S*)`))
+        const currentLocation = window.location.href.replace(/\/+$/, '');
+        const match = currentLocation.match(new RegExp(`.*\/${unique}\/(?<variant>[\\w-]*)(?<view>\\S*)`))
         if (!match || !match.length) {
             console.error('Could not match against current location, unable to switch to preview.')
             return;
         }
 
-        const previewUrl = `${window.location.href.replace(match.groups?.view ?? '', '')}/view/headless-preview`
-        if (window.location.href !== previewUrl) {
+        const previewUrl = `${currentLocation.replace(match.groups?.view ?? '', '')}/view/headless-preview`
+        if (currentLocation !== previewUrl) {
             window.history.pushState(null, '', previewUrl)
         }
     }
