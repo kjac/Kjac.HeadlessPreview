@@ -1,7 +1,7 @@
 import {UMB_DOCUMENT_WORKSPACE_CONTEXT} from '@umbraco-cms/backoffice/document';
-import {UmbSubmitWorkspaceAction} from '@umbraco-cms/backoffice/workspace';
+import {UmbWorkspaceActionBase} from '@umbraco-cms/backoffice/workspace';
 
-export class DocumentSaveAndPreviewWorkspaceAction extends UmbSubmitWorkspaceAction {
+export class DocumentSaveAndPreviewWorkspaceAction extends UmbWorkspaceActionBase {
 
     // TODO: need to implement this at some point (UmbDocumentUserPermissionCondition is not available atm)
     // constructor(host: UmbControllerHost, args: any) {
