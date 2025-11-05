@@ -102,7 +102,6 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
         this.consumeContext(UMB_DOCUMENT_WORKSPACE_CONTEXT, (instance) => {
             const document = instance?.getData();
             if (!document) {
-                console.error("No document found in the workspace context, aborting preview.")
                 return;
             }
             this._documentWorkspaceContext = instance;
