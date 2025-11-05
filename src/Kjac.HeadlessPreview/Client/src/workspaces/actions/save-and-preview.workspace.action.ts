@@ -32,9 +32,23 @@ export class DocumentSaveAndPreviewWorkspaceAction extends UmbWorkspaceActionBas
     // }
 
     override async execute() {
-        await super.execute();
         const workspaceContext = await this.getContext(UMB_DOCUMENT_WORKSPACE_CONTEXT);
-        const unique = workspaceContext?.getUnique();
+        if (!workspaceContext) {
+            throw new Error('Document workspace context not found');
+        }
+
+        // workspaceContext.saveAndPreview() calls window.open() to display the default preview in a new tab. we definitively
+        // don't want the default preview in a new tab, so we'll temporarily monkey patch window.open() as a no-op.
+        const windowOpen = window.open;
+        try {
+            window.open = _ => null;
+            await workspaceContext.saveAndPreview();
+        }
+        finally {
+            window.open = windowOpen;
+        }
+
+        const unique = workspaceContext.getUnique();
         const currentLocation = window.location.href.replace(/\/+$/, '');
         const match = currentLocation.match(new RegExp(`.*\/${unique}\/(?<variant>[\\w-]*)(?<view>\\S*)`))
         if (!match || !match.length) {
