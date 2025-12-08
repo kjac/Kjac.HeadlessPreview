@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution 
 		..\README.md = ..\README.md
 		Kjac.HeadlessPreview\Client\package.json = Kjac.HeadlessPreview\Client\package.json
 		..\umbraco-marketplace.json = ..\umbraco-marketplace.json
+		global.json = global.json
 	EndProjectSection
 EndProject
 Global
