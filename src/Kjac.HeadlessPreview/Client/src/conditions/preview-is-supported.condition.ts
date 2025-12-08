@@ -7,7 +7,7 @@ import type {
 } from '@umbraco-cms/backoffice/extension-api';
 import {UmbConditionBase} from '@umbraco-cms/backoffice/extension-registry';
 import {
-    DocumentTypeService,
+    DocumentType,
     type GetHeadlessPreviewDocumentTypePreviewSupportedResponse
 } from "../api";
 import { RequestResult } from '@hey-api/client-fetch';
@@ -43,7 +43,7 @@ class RequestManager {
     public static request(documentTypeId: string)
     {
         if (!this._activeRequest) {
-            this._activeRequest = DocumentTypeService.getHeadlessPreviewDocumentTypePreviewSupported({
+            this._activeRequest = DocumentType.getHeadlessPreviewDocumentTypePreviewSupported({
                 query: {
                     documentTypeId: documentTypeId
                 }
