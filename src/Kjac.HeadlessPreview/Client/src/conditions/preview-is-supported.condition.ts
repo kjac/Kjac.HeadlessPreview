@@ -10,7 +10,7 @@ import {
     DocumentType,
     type GetHeadlessPreviewDocumentTypePreviewSupportedResponse
 } from "../api";
-import { RequestResult } from '@hey-api/client-fetch';
+import {RequestResult} from "../api/client";
 
 export class PreviewIsSupportedCondition
     extends UmbConditionBase<UmbConditionConfigBase>
