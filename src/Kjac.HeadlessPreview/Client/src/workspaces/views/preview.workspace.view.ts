@@ -7,7 +7,7 @@ import {UMB_INVARIANT_CULTURE} from '@umbraco-cms/backoffice/variant';
 import {HEADLESS_PREVIEW_CONTEXT_TOKEN, WorkspaceContext} from '../contexts/workspace.context.ts';
 import {PreviewDevice} from '../../models/previewDevice.ts';
 import {UmbDocumentTypeDetailRepository} from '@umbraco-cms/backoffice/document-type';
-import {DocumentPreviewUrlInfoModel, DocumentService} from '../../api';
+import {DocumentPreviewUrlInfoModel, Document} from '../../api';
 import {UMB_SERVER_CONTEXT} from '@umbraco-cms/backoffice/server';
 import {HEADLESS_PREVIEW_EDIT_PROPERTY_MODAL_TOKEN} from './edit-property.modal.view.ts';
 import {UmbModalRouteRegistrationController} from '@umbraco-cms/backoffice/router';
@@ -127,7 +127,7 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
                         ? activeVariant
                         : undefined;
 
-                    const previewUrlResponse = await DocumentService.getHeadlessPreviewDocumentPreviewUrlInfo({
+                    const previewUrlResponse = await Document.getHeadlessPreviewDocumentPreviewUrlInfo({
                         query: {
                             documentId: this._documentId!,
                             culture: this._activeVariant?.culture ?? undefined,
