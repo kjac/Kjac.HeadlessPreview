@@ -6,7 +6,6 @@ import {ActiveVariant} from '@umbraco-cms/backoffice/workspace';
 import {UMB_INVARIANT_CULTURE} from '@umbraco-cms/backoffice/variant';
 import {HEADLESS_PREVIEW_CONTEXT_TOKEN, WorkspaceContext} from '../contexts/workspace.context.ts';
 import {PreviewDevice} from '../../models/previewDevice.ts';
-import {UmbDocumentTypeDetailRepository} from '@umbraco-cms/backoffice/document-type';
 import {DocumentPreviewUrlInfoModel, Document} from '../../api';
 import {UMB_SERVER_CONTEXT} from '@umbraco-cms/backoffice/server';
 import {HEADLESS_PREVIEW_EDIT_PROPERTY_MODAL_TOKEN} from './edit-property.modal.view.ts';
@@ -310,30 +309,30 @@ export default class PreviewWorkspaceViewElement extends UmbLitElement {
         const mode = parts.length > 1 ? parts[1] : 'default';
         const modalSize = (mode == 'modal' && parts.length == 3 ? parts[2] : 'large') as UUIModalSidebarSize;
         
-        if (!this._documentId || !this._documentTypeId) {
+        if (!this._documentId || !this._documentTypeId || !this._documentWorkspaceContext) {
             console.error('No document or document type ID found yet. Cannot edit property. This really should not have happened.')
             return;
         }
 
-        const documentTypeResponse = await new UmbDocumentTypeDetailRepository(this).requestByUnique(this._documentTypeId);
-        if (documentTypeResponse.error) {
-            console.error(`Could not fetch document type: ${this._documentTypeId}`, documentTypeResponse.error)
-            return;
-        }
+        // the document type structure holds the document type itself as well as all its compositions (inherited and composed),
+        // so we must look for the property type (and its containers) across all of them - not just on the document type itself.
+        const structure = this._documentWorkspaceContext.structure;
+        await structure.whenLoaded();
 
-        const documentType = documentTypeResponse.data!;
-        const propertyType = documentType.properties.find(p => p.alias === alias);
+        const contentTypes = structure.getContentTypes();
+        const propertyType = contentTypes.flatMap(c => c.properties).find(p => p.alias === alias);
 
         if (!propertyType) {
-            console.warn(`The property type with alias "${alias}" could not be found on the document type with alias "${documentType.alias}"`);
+            console.warn(`The property type with alias "${alias}" could not be found on the document type with alias "${structure.getOwnerContentType()?.alias}" (nor on any of its compositions)`);
             return;
         }
 
         if (mode === 'default') {
+            const containers = contentTypes.flatMap(c => c.containers);
             let tabName = null;
             let containerIdentifier = propertyType.container;
             while (containerIdentifier?.id) {
-                const container = documentType.containers.find(c => c.id === containerIdentifier!.id);
+                const container = containers.find(c => c.id === containerIdentifier!.id);
                 if (!container) {
                     break;
                 }

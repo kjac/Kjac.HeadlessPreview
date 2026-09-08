@@ -9,7 +9,6 @@ import {
     UmbPropertyDatasetElement,
     UmbPropertyValueData
 } from "@umbraco-cms/backoffice/property";
-import { UmbDocumentTypeDetailRepository } from "@umbraco-cms/backoffice/document-type";
 import {UmbDataTypeDetailModel, UmbDataTypeDetailRepository } from "@umbraco-cms/backoffice/data-type";
 import { UmbPropertyTypeModel } from "@umbraco-cms/backoffice/content-type";
 
@@ -64,8 +63,20 @@ export default class EditFilterModalElement
                 return;
             }
             this._documentName = instance.getName();
-            const documentTypeDetails = await new UmbDocumentTypeDetailRepository(this).requestByUnique(instance.getContentTypeUnique()!);
-            this._propertyType = documentTypeDetails.data!.properties.find(p =>  p.alias === this.data!.alias)!;
+
+            // the property can stem from a composition (inherited or composed), so look for it across the entire
+            // document type structure - not just on the document type itself.
+            await instance.structure.whenLoaded();
+            const propertyType = instance.structure
+                .getContentTypes()
+                .flatMap(c => c.properties)
+                .find(p => p.alias === this.data!.alias);
+            if (!propertyType) {
+                console.warn(`The property type with alias "${this.data!.alias}" could not be found on the document type with alias "${instance.structure.getOwnerContentType()?.alias}" (nor on any of its compositions)`);
+                return;
+            }
+
+            this._propertyType = propertyType;
             const dataTypeDetails = await new UmbDataTypeDetailRepository(this).requestByUnique(this._propertyType.dataType.unique);
             this._dataType = dataTypeDetails.data!;
         });
